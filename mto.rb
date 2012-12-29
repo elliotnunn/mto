@@ -9,7 +9,7 @@ require 'fileutils'
 
 # Set up a global logger
 
-$log = Logger.new(File.open('log.txt', File::WRONLY | File::APPEND | File::CREAT))
+$log = Logger.new(File.open('/var/log/mto.txt', File::WRONLY | File::APPEND | File::CREAT))
 $log.level = Logger::DEBUG
 
 # Parse command-line options
