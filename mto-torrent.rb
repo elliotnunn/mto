@@ -161,30 +161,29 @@ module MTO
       @kind
     end
     
-    def get_out_paths!
+    def get_out_paths!(dest_dirs)
       @out_paths = []
     
       case @kind
       when :movie_year
-        @out_paths << "Movies/%s (%s)%s" % [@clean_attribs[:mov_name], @clean_attribs[:year], @extname]
+        @out_paths << dest_dirs['movies'] + "%s (%s)%s" % [@clean_attribs[:mov_name], @clean_attribs[:year], @extname]
       when :movie_noyear
-        @out_paths << "Movies/%s%s"      % [@clean_attribs[:mov_name], @extname]
+        @out_paths << dest_dirs['movies'] + "%s%s"      % [@clean_attribs[:mov_name], @extname]
       when :episode_season
-        @out_paths << "Shows/%s/%s %sx%s - \"%s\"%s"  % [@clean_attribs[:show_name], @clean_attribs[:show_name], @clean_attribs[:seas_no], @clean_attribs[:ep_no], @clean_attribs[:ep_name], @extname]
+        @out_paths << dest_dirs['shows'] + "%s/%s %sx%s - \"%s\"%s"  % [@clean_attribs[:show_name], @clean_attribs[:show_name], @clean_attribs[:seas_no], @clean_attribs[:ep_no], @clean_attribs[:ep_name], @extname]
       when :episode_absolute
-        @out_paths << "Shows/%s/%s E%s - \"%s\"%s"    % [@clean_attribs[:show_name], @clean_attribs[:show_name],                             @clean_attribs[:ep_no], @clean_attribs[:ep_name], @extname]
+        @out_paths << dest_dirs['shows'] + "%s/%s E%s - \"%s\"%s"    % [@clean_attribs[:show_name], @clean_attribs[:show_name],                             @clean_attribs[:ep_no], @clean_attribs[:ep_name], @extname]
       end
-    
+      
       @out_paths
     end
   
-    # Ensures that a relative symlink exists at each path in @out_paths (calculated by get_out_paths!). Takes a destination directory (a Pathname) to which
-    # each path is assumed relative. Will delete a pre-existing file at the destination unless it is a symlink with the correct path. If a block is given then
+    # Ensures that a relative symlink exists at each path in @out_paths (calculated by get_out_paths!).
+    # Will delete a pre-existing file at the destination unless it is a symlink with the correct path. If a block is given then
     # it will be called after each path is iterated over, with the symlink path, relative target path, whether a pre-existing file was deleted and whether the
     # link needed to be created. No action is taken on the filesystem if a block is given that does not return true.
-    def create_links!(dest_dir)
-      @out_paths.each do |this_path|
-        create_at = dest_dir + this_path
+    def create_links!()
+      @out_paths.each do |create_at|
         target_relative = @path.relative_path_from(create_at.parent)
       
         # Pathname#exist? follows symlinks, so a dangling symlink gives false!
@@ -220,8 +219,8 @@ module MTO
     end
   
     # Wraps get_kind!, get_clean_attribs!, get_out_paths! and create_links!(dest_dir, &block), to fully classify self and create
-    # links to self based on parent_attribs. Takes dest_dir and optionally a block to pass to create_links!.
-    def sort_out!(dest_dir, &block)
+    # links to self based on parent_attribs. Takes dest_dirs (Hash) and optionally a block to pass to create_links!.
+    def sort_out!(dest_dirs, &block)
       $log.debug { "Sorting out " + @path.to_s }
       
       get_parent_attribs!
@@ -236,13 +235,13 @@ module MTO
       get_kind!
       $log.debug { "  @kind           = " + @kind.to_s }
       
-      get_out_paths!
+      get_out_paths!(dest_dirs)
       $log.debug { "  @out_paths[0]   = " + @out_paths[0].to_s }
       
       if block_given?
-        create_links!(dest_dir, &block)
+        create_links!(&block)
       else
-        create_links!(dest_dir)
+        create_links!
       end
     end
   
@@ -295,8 +294,8 @@ module MTO
       end
     end
   
-    def sort_out_children!(dest_dir, &block)
-      @children.each { |this_child| this_child.sort_out!(dest_dir, &block) }
+    def sort_out_children!(dest_dirs, &block)
+      @children.each { |this_child| this_child.sort_out!(dest_dirs, &block) }
     end
   end
   
