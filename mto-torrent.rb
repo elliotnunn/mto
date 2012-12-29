@@ -129,7 +129,7 @@ module MTO
       end
       
       if @clean_attribs.include?(:ep_name)
-        @clean_attribs[:ep_name].sub!(/^[\.\-_ \(\)\[\]\{\}]+/, '')
+        @clean_attribs[:ep_name].sub!(/^[\.\-_ ]+/, '')
       end
       
       @clean_attribs
