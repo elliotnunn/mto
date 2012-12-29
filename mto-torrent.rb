@@ -170,9 +170,9 @@ module MTO
       when :movie_noyear
         @out_paths << dest_dirs['movies'] + "%s%s"      % [@clean_attribs[:mov_name], @extname]
       when :episode_season
-        @out_paths << dest_dirs['shows'] + "%s/%s %sx%s - \"%s\"%s"  % [@clean_attribs[:show_name], @clean_attribs[:show_name], @clean_attribs[:seas_no], @clean_attribs[:ep_no], @clean_attribs[:ep_name], @extname]
+        @out_paths << dest_dirs['shows'] + "%s/%s %sx%s - '%s'%s"  % [@clean_attribs[:show_name], @clean_attribs[:show_name], @clean_attribs[:seas_no], @clean_attribs[:ep_no], @clean_attribs[:ep_name], @extname]
       when :episode_absolute
-        @out_paths << dest_dirs['shows'] + "%s/%s E%s - \"%s\"%s"    % [@clean_attribs[:show_name], @clean_attribs[:show_name],                             @clean_attribs[:ep_no], @clean_attribs[:ep_name], @extname]
+        @out_paths << dest_dirs['shows'] + "%s/%s E%s - '%s'%s"    % [@clean_attribs[:show_name], @clean_attribs[:show_name],                             @clean_attribs[:ep_no], @clean_attribs[:ep_name], @extname]
       end
       
       @out_paths
