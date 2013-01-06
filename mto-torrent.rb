@@ -62,8 +62,8 @@ module MTO
       end
     end
     
-    # Matches the filename to Regexps in REGEXEN until a match is found, then loads named captures into a Hash which is merged with @parent_attribs.
-    # The resulting hash is saved to @raw_attribs and returned.
+    # Matches the filename to Regexps in REGEXEN until a match is found, then loads named captures into a
+    # Hash which is merged with @parent_attribs. The resulting hash is saved to @raw_attribs and returned.
     def get_raw_attribs!
       hash = {}
       REGEXEN.each do |this_regexp|
@@ -121,7 +121,7 @@ module MTO
       
       if @clean_attribs.include?(:seas_no)
         @clean_attribs[:seas_no].sub!(/^0+/, '')
-        # @clean_attribs[:seas_no] = @clean_attribs[:seas_no].rjust(2, '0')
+        @clean_attribs[:seas_no] = @clean_attribs[:seas_no].rjust(2, '0')
       end
       
       if @clean_attribs.include?(:ep_no)
@@ -207,7 +207,7 @@ module MTO
           $log.debug { "  should create" }
         end
       
-        # only proceed with irreversible operations if there is no block, or the block returns true explicitly
+        # only proceed with irreversible operations if the block returns true explicitly
         go_ahead = yield(create_at, target_relative, do_delete_existing, do_create_link) == true
       
         if go_ahead
