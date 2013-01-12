@@ -1,0 +1,58 @@
+MTO is the "Magic" Torrent Organiser.
+
+
+ARGUMENT
+
+I wrote MTO to solve the problems that I experienced trying to get torrents into XBMC without ongoing manual intervention. My family have their torrents download on a headless Ubuntu machine in the roof, and a handful of XBMC machines around the house use this as a media source.
+
+For XBMC to pull your torrents into the video library, at a minimum it needs the movies, TV shows, etc. to be separate. All GUI media managers that I have found, have a similar limitation. Even worse, torrents often have tricky naming schemes that XBMC will not recognise without custom regular expressions set. A pain! MTO is my attempt at filling the need for a "fully-automatic" media organiser that operates between your BitTorrent client and your media centre (XBMC!) or even just you when you use a file browser.
+
+
+OVERVIEW
+
+MTO looks at one or more downloaded torrents (or really any file or directory), and classifies each individual file in the torrent based on its name and path. It then creates symlinks to each classified file in the directories specified on the command line, leaving the originals untouched.
+
+Leaving a torrent intact allows the BitTorrent client to continue seeding it while also sorting it into a predictable structure. The naming scheme used by MTO is easy on the eyes, preserves a lot of the information in the original filename, and is easily understood by XBMC with its default settings.
+
+When run without the "--deletion-sandbox" option, MTO will delete all files in the "out" directories that it did not just classify. This means that if you just want to classify one new torrent into your destination without deleting all your existing symlinks, you should definitely use "--deletion-sandbox". If in doubt, use it anyway.
+
+
+COOL THINGS
+
+Some things that I think make MTO good:
+- It leaves original torrents untouched.
+- It is very flexible about naming schemes: very few false positives and false negatives.
+- It works nicely on unfinished multi-file torrents, and can complete its work as more files are downloaded.
+- It orphaned symlinks if you delete a torrent, change the naming policy, etc.
+- It can run on a single torrent (e.g. as a Transmission torrent completion script).
+- It can run on all the torrents in your downloads folder (e.g. as an hourly scheduled task).
+- It uses regular expressions to extract usable information from every component of a file's path.
+- It is structured around the easily-understood TorrentChild class, which should easily allow anyone familiar with Ruby to extend its capabilities.
+
+
+USAGE
+
+mto.rb is run from the command line using the arguments below. Apologies: the command line argument parsing is a bit delicate. You should be sure that you don't have any important files in the "out-dirs" before you tinker with MTO.
+
+mto.rb [--creation-sandbox] [--deletion-sandbox] [--out-dir-X dir] torrent . . .
+
+--creation-sandbox
+	Don't create or replace any symlinks. Target paths are still calculated.
+
+--deletion-sandbox
+	Don't go through the destination directories looking for orphaned symlinks or misc files to delete. This should ALWAYS be used unless you are using MTO to classify ALL your torrents at once.
+
+--out-dir-X dir
+	Specifies that you want media of type X to be symlinked to in dir. Currently only --out-dir-movies and -out-dir-shows are supported. If a destination for a media type is not specified, then the symlinks are created in a directory called "movies" or "shows" in the current working directory.
+
+Put the torrents themselves at the end of the command line. If you want to classify all the torrents in a folder, then use shell completion (*), as in the following example.
+
+
+EXAMPLE 1 -- enough to get you started -- but cd to the program directory before you run
+
+./mto.rb /path/to/downloads/*
+
+
+EXAMPLE 2 -- try fiddling with the options a bit
+
+./mto.rb --deletion-sandbox --out-dir-movies ~/Movies --out-dir-shows ~/Shows ~/Downloads/*

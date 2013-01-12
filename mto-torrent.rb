@@ -1,5 +1,22 @@
 #!/usr/bin/env ruby
 
+#     Copyright 2013 Elliot Nunn
+# 
+#     This file is part of MTO.
+# 
+#     MTO is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+# 
+#     MTO is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+# 
+#     You should have received a copy of the GNU General Public License
+#     along with MTO.  If not, see <http://www.gnu.org/licenses/>.
+
 require 'pathname'
 require 'yaml'
 require 'fileutils'
@@ -121,7 +138,7 @@ module MTO
       
       if @clean_attribs.include?(:seas_no)
         @clean_attribs[:seas_no].sub!(/^0+/, '')
-        @clean_attribs[:seas_no] = @clean_attribs[:seas_no].rjust(2, '0')
+        # @clean_attribs[:seas_no] = @clean_attribs[:seas_no].rjust(2, '0')
       end
       
       if @clean_attribs.include?(:ep_no)
