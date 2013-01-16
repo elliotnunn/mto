@@ -25,7 +25,7 @@ require 'pathname'
 require 'fileutils'
 
 # Set up a global logger
-$log = Logger.new(File.open('log.txt', File::WRONLY | File::APPEND | File::CREAT))
+$log = Logger.new(STDOUT)
 $log.level = Logger::DEBUG
 
 # Parse command-line options
